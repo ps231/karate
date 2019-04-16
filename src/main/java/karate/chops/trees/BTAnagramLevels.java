@@ -5,146 +5,163 @@ import java.util.*;
 //given two binary trees, check if the levels are anagrams of each other
 public class BTAnagramLevels {
 
-	public static void main(String[] args) {
-		BinaryTreeNode n1 = createBinaryTree1();
-		BinaryTreeNode n2 = createBinaryTree2();
-		System.out.println(areLevelsAnagram(n1, n2));
-	}
+    public static void main(String[] args) {
+        BinaryTreeNode n1 = createBinaryTree1();
+        BinaryTreeNode n2 = createBinaryTree2();
 
-	private static BinaryTreeNode createBinaryTree1() {
-		BinaryTreeNode root = new BinaryTreeNode();
-		root.value = 1;
+        System.out.println(areLevelsAnagram(n1, n2));
+        n2.right = null;
+        System.out.println(areLevelsAnagram(n2, n1));
+        System.out.println(areLevelsAnagram(null, n2));
+        System.out.println(areLevelsAnagram(n1, null));
+    }
 
-		BinaryTreeNode left = new BinaryTreeNode();
-		left.value = 2;
+    private static BinaryTreeNode createBinaryTree1() {
+        BinaryTreeNode root = new BinaryTreeNode();
+        root.value = 1;
 
-		BinaryTreeNode right = new BinaryTreeNode();
-		right.value = 3;
+        BinaryTreeNode left = new BinaryTreeNode();
+        left.value = 2;
 
-		root.left = left;
-		root.right = right;
+        BinaryTreeNode right = new BinaryTreeNode();
+        right.value = 3;
 
-		left = new BinaryTreeNode();
-		left.value = 4;
+        root.left = left;
+        root.right = right;
 
-		right = new BinaryTreeNode();
-		right.value = 5;
+        left = new BinaryTreeNode();
+        left.value = 4;
 
-		root.left.left = left;
-		root.left.right = right;
+        right = new BinaryTreeNode();
+        right.value = 5;
 
-		left = new BinaryTreeNode();
-		left.value = 6;
+        root.left.left = left;
+        root.left.right = right;
 
-		right = new BinaryTreeNode();
-		right.value = 7;
+        left = new BinaryTreeNode();
+        left.value = 6;
 
-		root.right.left = left;
-		root.right.right = right;
+        right = new BinaryTreeNode();
+        right.value = 7;
 
-		return root;
-	}
+        root.right.left = left;
+        root.right.right = right;
 
-	private static BinaryTreeNode createBinaryTree2() {
-		BinaryTreeNode root = new BinaryTreeNode();
-		root.value = 1;
+        return root;
+    }
 
-		BinaryTreeNode left = new BinaryTreeNode();
-		left.value = 3;
+    private static BinaryTreeNode createBinaryTree2() {
+        BinaryTreeNode root = new BinaryTreeNode();
+        root.value = 1;
 
-		BinaryTreeNode right = new BinaryTreeNode();
-		right.value = 2;
+        BinaryTreeNode left = new BinaryTreeNode();
+        left.value = 3;
 
-		root.left = left;
-		root.right = right;
+        BinaryTreeNode right = new BinaryTreeNode();
+        right.value = 2;
 
-		left = new BinaryTreeNode();
-		left.value = 6;
+        root.left = left;
+        root.right = right;
 
-		right = new BinaryTreeNode();
-		right.value = 5;
+        left = new BinaryTreeNode();
+        left.value = 6;
 
-		root.left.left = left;
-		root.left.right = right;
+        right = new BinaryTreeNode();
+        right.value = 5;
 
-		left = new BinaryTreeNode();
-		left.value = 4;
+        root.left.left = left;
+        root.left.right = right;
 
-		right = new BinaryTreeNode();
-		right.value = 7;
+        left = new BinaryTreeNode();
+        left.value = 4;
 
-		root.right.left = left;
-//        root.right.right = right;
+        right = new BinaryTreeNode();
+        right.value = 7;
 
-		return root;
-	}
+        root.right.left = left;
+        root.right.right = right;
 
-	private static boolean areLevelsAnagram(BinaryTreeNode n1, BinaryTreeNode n2) {
+        return root;
+    }
 
-		if (n1 == null || n2 == null)
-			return false;
+    private static boolean areLevelsAnagram(BinaryTreeNode n1, BinaryTreeNode n2) {
+        if (n1 == null && n2 == null)
+            return true;
+        if (n1 == null || n2 == null)
+            return false;
 
-		if (n2 == null)
-			return false;
+        Queue<BinaryTreeNode> q11 = new LinkedList<>();
+        Queue<BinaryTreeNode> q12 = new LinkedList<>();
 
-		Set<BinaryTreeNode> s1 = new LinkedHashSet<BinaryTreeNode>();
-		Set<BinaryTreeNode> s11 = new LinkedHashSet<BinaryTreeNode>();
+        Queue<BinaryTreeNode> q21 = new LinkedList<>();
+        Queue<BinaryTreeNode> q22 = new LinkedList<>();
 
-		Set<BinaryTreeNode> s2 = new LinkedHashSet<BinaryTreeNode>();
-		Set<BinaryTreeNode> s22 = new LinkedHashSet<BinaryTreeNode>();
+        q11.offer(n1);
+        q21.offer(n2);
 
-		s1.add(n1);
-		s2.add(n2);
+        Map<Integer, Integer> nodeCount = null;
+        while (!q11.isEmpty() || !q12.isEmpty() || !q21.isEmpty() || !q22.isEmpty()) {
+            if (!q11.isEmpty() && !q21.isEmpty()) {
+                nodeCount = new HashMap<>();
+                while (!q11.isEmpty()) {
+                    BinaryTreeNode t = q11.poll();
+                    if (t.left != null)
+                        q12.offer(t.left);
+                    if (t.right != null)
+                        q12.offer(t.right);
+                    if (!nodeCount.containsKey(t.value))
+                        nodeCount.put(t.value, 1);
+                    else
+                        nodeCount.put(t.value, nodeCount.get(t.value) + 1);
+                }
+                while (!q21.isEmpty()) {
+                    BinaryTreeNode t = q21.poll();
+                    if (!nodeCount.containsKey(t.value))
+                        return false;
+                    if (nodeCount.get(t.value) == 1)
+                        nodeCount.remove(t.value);
+                    else
+                        nodeCount.put(t.value, nodeCount.get(t.value) - 1);
+                    if (t.left != null)
+                        q22.offer(t.left);
+                    if (t.right != null)
+                        q22.offer(t.right);
+                }
+                if (!nodeCount.isEmpty())
+                    return false;
 
-		while (!s1.isEmpty() || !s11.isEmpty() || !s2.isEmpty() || !s22.isEmpty()) {
-			if (!s1.isEmpty()) {
-				while (s1.iterator().hasNext()) {
-					BinaryTreeNode temp = s1.iterator().next();
-					if (!s2.contains(temp)) {
-						return false;
-					} else {
-						if (temp.left != null)
-							s11.add(temp.left);
-						if (temp.right != null)
-							s11.add(temp.right);
-						s1.remove(temp);
-					}
-				}
-			} else {
-				while (s11.iterator().hasNext()) {
-					BinaryTreeNode temp = s11.iterator().next();
-					if (!s22.contains(temp)) {
-						return false;
-					} else {
-						if (temp.left != null)
-							s1.add(temp.left);
-						if (temp.right != null)
-							s1.add(temp.right);
-						s11.remove(temp);
-					}
-				}
-			}
+            }
+            if (!q12.isEmpty() && !q22.isEmpty()) {
+                nodeCount = new HashMap<>();
+                while (!q12.isEmpty()) {
+                    BinaryTreeNode t = q12.poll();
+                    if (t.left != null)
+                        q11.offer(t.left);
+                    if (t.right != null)
+                        q11.offer(t.right);
+                    if (!nodeCount.containsKey(t.value))
+                        nodeCount.put(t.value, 1);
+                    else
+                        nodeCount.put(t.value, nodeCount.get(t.value) + 1);
+                }
+                while (!q22.isEmpty()) {
+                    BinaryTreeNode t = q22.poll();
+                    if (!nodeCount.containsKey(t.value))
+                        return false;
+                    if (nodeCount.get(t.value) == 1)
+                        nodeCount.remove(t.value);
+                    else
+                        nodeCount.put(t.value, nodeCount.get(t.value) - 1);
+                    if (t.left != null)
+                        q21.offer(t.left);
+                    if (t.right != null)
+                        q21.offer(t.right);
+                }
+                if (!nodeCount.isEmpty())
+                    return false;
 
-			if (!s2.isEmpty()) {
-				while (s2.iterator().hasNext()) {
-					BinaryTreeNode temp = s2.iterator().next();
-					if (temp.left != null)
-						s22.add(temp.left);
-					if (temp.right != null)
-						s22.add(temp.right);
-					s2.remove(temp);
-				}
-			} else {
-				while (s22.iterator().hasNext()) {
-					BinaryTreeNode temp = s22.iterator().next();
-					if (temp.left != null)
-						s2.add(temp.left);
-					if (temp.right != null)
-						s2.add(temp.right);
-					s22.remove(temp);
-				}
-			}
-		}
-		return true;
-	}
+            }
+        }
+        return true;
+    }
 }
