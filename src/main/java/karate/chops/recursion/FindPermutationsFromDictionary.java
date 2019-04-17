@@ -3,7 +3,6 @@ package karate.chops.recursion;
 import java.util.*;
 
 public class FindPermutationsFromDictionary {
-	private Map<Character, String> keypad = new HashMap<Character, String>();
 
 	public static void main(String... strings) {
 		FindPermutationsFromDictionary g = new FindPermutationsFromDictionary();
@@ -22,6 +21,7 @@ public class FindPermutationsFromDictionary {
 
 	private void generatePermutations(String phoneNumber, Set<String> dictionary) {
 		List<String> combinations = new ArrayList<>();
+		Map<Character, String> keypad = new HashMap<Character, String>();
 		keypad.put('2', "abc");
 		keypad.put('3', "def");
 		keypad.put('4', "ghi");
