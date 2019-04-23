@@ -4,51 +4,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PascalsTriangle {
+    public static void main(String[] args) {
+        printResult(drawPascalsTriangle(0));
+        printResult(drawPascalsTriangle(1));
+        printResult(drawPascalsTriangle(2));
+        printResult(drawPascalsTriangle(3));
+        printResult(drawPascalsTriangle(4));
+        printResult(drawPascalsTriangle(5));
+        printResult(drawPascalsTriangle(6));
+    }
 
-	public static void main(String[] args) {
-		List<List<Integer>> pascalsTriangle = drawPascalsTriangle(5);
+    private static void printResult(List<List<Integer>> pascalsTriangle) {
+        if (pascalsTriangle == null) {
+            System.out.println("cannot draw the triangle");
+        } else {
+            for (List<Integer> row : pascalsTriangle) {
+                for (int col : row)
+                    System.out.print(col + " ");
+                System.out.println("");
+            }
+        }
+        System.out.println("--");
+    }
 
-		for (List<Integer> row : pascalsTriangle) {
-			for (int col : row)
-				System.out.print(col + " ");
-			System.out.println("");
-		}
-	}
+    public static List<List<Integer>> drawPascalsTriangle(int n) {
+        if (n <= 0)
+            return null;
 
-//	private static List<List<Integer>> drawPascalsTriangle(int rows) {
-//		List<List<Integer>> pascal = new ArrayList<>();
-//		
-//		for(int i = 0; i<rows;i++) {
-//			List<Integer> row = new ArrayList<>(i+1);
-//			for(int j = 0; j<=i;j++) {
-//				if(j==0 || j == i)
-//					row.add(1);
-//				else
-//					row.add(pascal.get(i-1).get(j-1) + pascal.get(i-1).get(j));
-//				
-//			}
-//			pascal.add(row);
-//		}
-//		
-//		return pascal;
-//	}
+        List<List<Integer>> result = new ArrayList<>();
 
-	private static List<List<Integer>> drawPascalsTriangle(int rows) {
-		if(rows==0)
-			return null;
-		List<List<Integer>> pascal = new ArrayList<List<Integer>>();
-		for(int i=0;i<rows;i++){
-			List<Integer> intermediate = new ArrayList<Integer>();
-			for(int j=0;j<=i;j++){
-				if(i==0)
-					intermediate.add(1);
-				else if(j==0 || j==i)
-					intermediate.add(1);
-				else
-					intermediate.add(pascal.get(i-1).get(j-1)+pascal.get(i-1).get(j));
-			}
-			pascal.add(intermediate);
-		}
-		return pascal;		
-	}
+        for (int i = 0; i < n; i++) {
+            List<Integer> intermediate = new ArrayList<>();
+            if (i == 0)
+                intermediate.add(1);
+            else {
+                for (int j = 0; j <= i; j++) {
+                    if (j == 0 || j == i) {
+                        intermediate.add(1);
+                    } else {
+                        intermediate.add(result.get(i - 1).get(j - 1) + result.get(i - 1).get(j));
+                    }
+                }
+            }
+            result.add(intermediate);
+        }
+        return result;
+    }
 }
