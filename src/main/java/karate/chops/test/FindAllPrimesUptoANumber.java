@@ -3,32 +3,33 @@ package karate.chops.test;
 import java.util.*;
 
 public class FindAllPrimesUptoANumber {
+    public static void main(String[] args) {
+        getAllPrimes(3).stream().forEach(System.out::println);
+        System.out.println("--");
+        getAllPrimes(2).stream().forEach(System.out::println);
+        System.out.println("--");
+        getAllPrimes(1).stream().forEach(System.out::println);
+        System.out.println("--");
+        getAllPrimes(18).stream().forEach(System.out::println);
+        System.out.println("--");
+    }
 
-	public static void main(String[] args) {
-//		getAllPrimes(3).stream().forEach(System.out::println);
-//		getAllPrimes(2).stream().forEach(System.out::println);
-//		getAllPrimes(1).stream().forEach(System.out::println);
-		getAllPrimes(50).stream().forEach(System.out::println);
-	}
-
-	private static List<Integer> getAllPrimes(int limit) {
-		if (limit < 2)
-			return new ArrayList<Integer>();
-
-		List<Integer> primes = new ArrayList<Integer>();
-		boolean isPrime = true;
-		for (int i = 2; i <= limit; i++) {
-			for (int j = 0; j < primes.size(); j++) {
-				if (i % primes.get(j) == 0) {
-					isPrime = false;
-					break;
-				}
-			}
-			if (isPrime)
-				primes.add(i);
-			isPrime = true; 
-		}
-		return primes;
-	}
-
+    public static List<Integer> getAllPrimes(int n) {
+        Set<Integer> primeCandidates = new HashSet<>();
+        if (n <= 1)
+            return new ArrayList<>(primeCandidates);
+        int i = 2;
+        while (i <= n)
+            primeCandidates.add(i++);
+        for (int j = 2; j <= n; j++) {
+            int multiple = 2;
+            while (j * multiple <= n) {
+                if (primeCandidates.contains(j * multiple)) {
+                    primeCandidates.remove(j * multiple);
+                }
+                multiple++;
+            }
+        }
+        return new ArrayList<>(primeCandidates);
+    }
 }
