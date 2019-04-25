@@ -2,24 +2,23 @@ package karate.chops.recursion;
 
 public class GenerateMatchingParenthesis {
 
-	public static void main(String... args) {
-		printParenthesis(3);
-	}
+    public static void main(String... args) {
+        printParenthesis(3);
+    }
 
-	private static void printParenthesis(int noOfPairs) {
-		helper(noOfPairs, noOfPairs, "");
-	}
+    private static void printParenthesis(int noOfPairs) {
+        helper(noOfPairs, noOfPairs, "");
+    }
 
-	private static void helper(int left, int right, String intermediate) {
-		if (left == 0 && right == 0) {
-			System.out.println(intermediate);
-			return;
-		}
-
-		if (left > 0)
-			helper(left - 1, right, intermediate + "(");
-
-		if (right > left)
-			helper(left, right - 1, intermediate + ")");
-	}
+    private static void helper(int leftCount, int rightCount, String intermediate) {
+        if (leftCount < 0 || rightCount < 0)
+            return;
+        if (leftCount == 0 && rightCount == 0) {
+            System.out.println(intermediate);
+            return;
+        }
+        helper(leftCount - 1, rightCount, intermediate + "(");
+        if (rightCount > leftCount)
+            helper(leftCount, rightCount - 1, intermediate + ")");
+    }
 }
