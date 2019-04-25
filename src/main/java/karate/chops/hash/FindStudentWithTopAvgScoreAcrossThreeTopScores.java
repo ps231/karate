@@ -3,52 +3,63 @@ package karate.chops.hash;
 import java.util.*;
 
 public class FindStudentWithTopAvgScoreAcrossThreeTopScores {
-	public static void main(String[] args) {
-		String[] studentScores = new String[] { "A,100", "B,100", "C,95", "D,98", "B,100", "A,85", "C,60", "D,83",
-				"A,100", "C,100", "D,100", "A,95", "C,95", "D,99" };
-		System.out.println(findStudentWithTopAvgScore(Arrays.asList(studentScores)));
-	}
+    public static void main(String[] args) {
+        System.out.println(findStudentWithTopAvgScore(Arrays.asList("A,100", "B,100", "C,95", "D,98", "B,100", "A,85", "C,60", "D,83", "a,100", "C,100", "D,100", "A,100", "C,95", "d,99")));
+        System.out.println(findStudentWithTopAvgScore(Arrays.asList("A,100", "B,100", "C,95", "D,98", "B,100", "A,85", "C,60", "D,83", "a,95", "C,100", "D,100", "A,100", "C,95", "d,99")));
+    }
 
-	private static String findStudentWithTopAvgScore(List<String> scores) {
+    private static String findStudentWithTopAvgScore(List<String> scores) {
+        if (scores == null || scores.size() == 0)
+            return null;
 
-		if (scores == null || scores.size() == 0)
-			return null;
+        Map<String, PriorityQueue<Integer>> studentTop3Map = new HashMap<>();
+        for (String s : scores) {
+            String[] record = s.split(",");
+            if (record.length != 2)
+                throw new IllegalArgumentException("invalid input");
 
-		Map<String, PriorityQueue<Integer>> studentScoresMap = new HashMap<String, PriorityQueue<Integer>>();
+            String studentName = record[0].toLowerCase();
+            int currentScore = Integer.parseInt(record[1]);
 
-		for (String record : scores) {
-			String[] splits = record.split(",");
-			if (!studentScoresMap.containsKey(splits[0])) {
-				studentScoresMap.put(splits[0], new PriorityQueue<Integer>(new Comparator<Integer>() {
-					public int compare(Integer i1, Integer i2) {
-						return Integer.compare(i1, i2);
-					}
-				}));
-			}
-			if (studentScoresMap.get(splits[0]).size() != 3) {
-				studentScoresMap.get(splits[0]).offer(Integer.parseInt(splits[1]));
-			} else if (studentScoresMap.get(splits[0]).peek() < Integer.parseInt(splits[1])) {
-				studentScoresMap.get(splits[0]).poll();
-				studentScoresMap.get(splits[0]).offer(Integer.parseInt(splits[1]));
-			} 
-		}
+            if (studentTop3Map.containsKey(studentName)) {
+                if (studentTop3Map.get(studentName).size() != 3) {
+                    PriorityQueue<Integer> topThreeScores = studentTop3Map.get(studentName);
+                    topThreeScores.offer(currentScore);
+                    studentTop3Map.put(studentName, topThreeScores);
+                } else {
+                    PriorityQueue<Integer> topThreeScores = studentTop3Map.get(studentName);
+                    if (topThreeScores.peek() < currentScore) {
+                        topThreeScores.poll();
+                        topThreeScores.offer(currentScore);
+                    }
+                }
+            } else {
+                PriorityQueue<Integer> pq = new PriorityQueue<>();
+                pq.offer(currentScore);
+                studentTop3Map.put(studentName, pq);
+            }
+        }
 
-		double maxAvgScore = Double.MIN_VALUE;
-		String studentName = null;
+        String studentWithMaxAvgScore = null;
+        int maxAvgScore = Integer.MIN_VALUE;
 
-		for (Map.Entry<String, PriorityQueue<Integer>> entry : studentScoresMap.entrySet()) {
-			if (entry.getValue().size() == 3) {
-				int total = 0;
-				while (entry.getValue().size() != 0) {
-					total += entry.getValue().poll();
-				}
-				int avgScore = total / 3;
-				if (avgScore > maxAvgScore) {
-					maxAvgScore = avgScore;
-					studentName = entry.getKey();
-				}
-			}
-		}
-		return studentName;
-	}
+        for (Map.Entry<String, PriorityQueue<Integer>> entry : studentTop3Map.entrySet()) {
+            if (entry.getValue().size() < 3)
+                continue;
+            int avgScore = calculateAvgScore(entry.getValue());
+            if (avgScore > maxAvgScore) {
+                studentWithMaxAvgScore = entry.getKey();
+                maxAvgScore = avgScore;
+            }
+        }
+        return studentWithMaxAvgScore;
+    }
+
+    private static int calculateAvgScore(PriorityQueue<Integer> scores) {
+        int sum = 0;
+        while (!scores.isEmpty()) {
+            sum += scores.poll();
+        }
+        return sum / 3;
+    }
 }
