@@ -1,47 +1,51 @@
 package karate.chops.trees;
 
-import java.util.*;
+import java.util.Stack;
 
 public class BSTIterator {
+    private BinaryTreeNode iter;
+    private Stack<BinaryTreeNode> stack = new Stack<>();
 
-	BinaryTreeNode next;
-	Stack<BinaryTreeNode> stack = new Stack<BinaryTreeNode>();
+    public BSTIterator(BinaryTreeNode root) {
+        if (root == null)
+            iter = null;
+        else {
+            while (root.left != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            iter = root;
+        }
+    }
 
-	BSTIterator(BinaryTreeNode root) {
-		next = root;
-		while (next.left != null) {
-			stack.push(next);
-			next = next.left;
-		}
-	}
+    public boolean hasNext() {
+        return iter != null;
+    }
 
-	public boolean hasNext() {
-		return next != null || !stack.isEmpty();
-	}
+    public BinaryTreeNode getNext() {
+        BinaryTreeNode result = iter;
 
-	public BinaryTreeNode getNext() {
+        if (iter.right == null) {
+            if (!stack.isEmpty())
+                iter = stack.pop();
+            else {
+                iter = null;
+            }
+        } else {
+            iter = iter.right;
+            while (iter.left != null) {
+                stack.push(iter);
+                iter = iter.left;
+            }
+        }
 
-		BinaryTreeNode current = next;
-		if (next.right != null) {
-			next = next.right;
-			while (next.left != null) {
-				stack.push(next);
-				next = next.left;
-			}
-		} else {
-			if (stack.isEmpty())
-				next = null;
-			else
-				next = stack.pop();
-		}
+        return result;
+    }
 
-		return current;
-	}
-
-	public static void main(String[] args) {
-		BSTIterator iter = new BSTIterator(CreateBST.createBinarySearchTree());
-		while (iter.hasNext()) {
-			System.out.println(iter.getNext().value);
-		}
-	}
+    public static void main(String[] args) {
+        BSTIterator iter = new BSTIterator(CreateBST.createBinarySearchTree());
+        while (iter.hasNext()) {
+            System.out.println(iter.getNext().value);
+        }
+    }
 }
