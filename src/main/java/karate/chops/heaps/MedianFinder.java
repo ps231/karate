@@ -19,6 +19,8 @@ public class MedianFinder {
     }
 
     public double getMedian() {
+        if (minHeap.isEmpty())
+            throw new IllegalStateException("median cannot be determined");
         if (minHeap.size() - maxHeap.size() == 1)
             return minHeap.peek();
         if (minHeap.size() == maxHeap.size())
@@ -33,6 +35,8 @@ public class MedianFinder {
         mf.add(105);
         mf.add(80);
         mf.add(115);
+        System.out.println(mf.getMedian());
+        mf = new MedianFinder();
         System.out.println(mf.getMedian());
     }
 }
