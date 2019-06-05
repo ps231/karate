@@ -36,4 +36,3 @@ public class MedianFinder {
         System.out.println(mf.getMedian());
     }
 }
-
