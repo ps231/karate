@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FindSubmergedPeaks {
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) {
         printList("Should print 1, 2", getSubmergedPeaks(new int[]{5, 4, 3, 5}));
         printList("Should print 1, 2, 3", getSubmergedPeaks(new int[]{5, 1, 1, 1, 5}));
         printList("Should print empty", getSubmergedPeaks(new int[]{5}));
