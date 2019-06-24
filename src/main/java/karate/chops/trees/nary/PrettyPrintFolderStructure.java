@@ -15,11 +15,9 @@ public class PrettyPrintFolderStructure {
         if (n == null)
             return;
         print(n.val, level);
-        if (n.children != null && n.children.size() != 0) {
-            for (NaryNode child : n.children) {
+        if (n.children != null && n.children.size() != 0)
+            for (NaryNode child : n.children)
                 helper(child, level + 1);
-            }
-        }
     }
 
     private static void print(String value, int level) {
