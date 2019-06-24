@@ -40,7 +40,6 @@ public class SuccessorInInorderBT {
                     root = root.right;
             }
         }
-
         if (root.right != null) {
             root = root.right;
             while (root.left != null)
