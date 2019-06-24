@@ -7,13 +7,16 @@ import java.util.List;
 public class PrintAllStringCombinationsWithBothCases {
 
     public static void main(String[] args) {
+        printCombinations(getCombinationsInAllCase(null));
         printCombinations(getCombinationsInAllCase("ab"));
         printCombinations(getCombinationsInAllCase("abc"));
     }
 
     private static void printCombinations(List<String> combinations) {
-        if (combinations == null || combinations.isEmpty())
+        if (combinations == null || combinations.isEmpty()) {
             System.out.println("Invalid input");
+            return;
+        }
         combinations.stream().forEach(System.out::println);
         System.out.println();
     }
