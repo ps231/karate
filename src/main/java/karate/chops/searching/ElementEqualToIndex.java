@@ -9,13 +9,16 @@ public class ElementEqualToIndex {
     }
 
     private static int elemEqualToIndex(int[] A) {
+        if (A == null || A.length == 0)
+            throw new IllegalArgumentException("invalid input");
+
         int low = 0;
         int high = A.length - 1;
         while (low <= high) {
             int mid = low + ((high - low) / 2);
             if (A[mid] == mid)
                 return mid;
-            else if (A[mid] > mid)
+            if (A[mid] > mid)
                 high = mid - 1;
             else
                 low = mid + 1;
