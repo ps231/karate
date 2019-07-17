@@ -12,43 +12,24 @@ public class MaxElemInAscDescSequence {
     }
 
     private static int maxElemInSeq(int[] A) {
-        int result = -1;
         if (A == null || A.length == 0)
-            return result;
+            throw new IllegalArgumentException("invalid input");
 
         int low = 0;
         int high = A.length - 1;
 
         while (low <= high) {
-            int mid = low + ((high - low) / 2);
-            if (mid == 0 && A[mid] > A[mid + 1]) {
-                result = A[mid];
-                break;
-            } else if (A[mid] > A[mid + 1] && A[mid] > A[mid - 1]) {
-                result = A[mid];
-                break;
-            } else if (A[mid] < A[mid + 1])
-                low = mid + 1;
-            else high = mid;
+            int mid = low + (high - low) / 2;
+            int prev = (mid + A.length - 1) % A.length;
+            int next = (mid + 1) % A.length;
+
+            if (A[mid] > A[next] && A[mid] > A[prev])
+                return A[mid];
+            if (A[mid] > A[next])
+                high = mid;
+            else
+                low = mid;
         }
-
-        return result;
+        return -1;
     }
-
-//	private static int maxElemInSeq(int[] A) {
-//		if (A == null || A.length == 0)
-//			return Integer.MIN_VALUE;
-//
-//		int low = 0;
-//		int high = A.length - 1;
-//
-//		while (low < high) {
-//			int mid = low + (high - low) / 2;
-//			if (A[mid] > A[mid + 1])
-//				high = mid;
-//			else if (A[mid] < A[mid + 1])
-//				low = mid + 1;
-//		}
-//		return A[low];
-//	}
 }
