@@ -1,30 +1,33 @@
 package karate.chops.recursion;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrintAllStringPermutations {
     public static void main(String[] args) {
-        printAllPermutations("abc")
+        PrintAllStringPermutations.printAllPermutations("agsbc")
                 .stream()
                 .forEach(System.out::println);
     }
 
-    private static List<String> printAllPermutations(String src) {
-        List<String> permutations = new ArrayList<>();
-        helper(src, permutations, 0, "", new boolean[src.length()]);
-        return permutations;
+    private static List<String> printAllPermutations(String s) {
+        if (s == null || s.length() == 0)
+            throw new IllegalArgumentException("invalid input");
+        List<String> combinations = new ArrayList<>();
+        helper(s, combinations, new boolean[s.length()], "", 0);
+        return combinations;
     }
 
-    private static void helper(String src, List<String> permutations, int level, String intermediate, boolean[] visited) {
-        if (level == src.length()) {
-            permutations.add(intermediate);
+    private static void helper(String s, List<String> combinations, boolean[] visited, String intermediate, int level) {
+        if (level == s.length()) {
+            combinations.add(intermediate);
             return;
         }
-        for (int i = 0; i < src.length(); i++) {
+        for (int i = 0; i < s.length(); i++) {
             if (visited[i])
                 continue;
             visited[i] = true;
-            helper(src, permutations, level + 1, intermediate + src.charAt(i), visited);
+            helper(s, combinations, visited, intermediate + s.charAt(i), level + 1);
             visited[i] = false;
         }
     }
