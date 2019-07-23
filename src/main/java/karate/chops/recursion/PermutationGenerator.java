@@ -7,25 +7,27 @@ import java.util.Map;
 
 class PermutationGenerator {
     public static void main(String... strings) {
-        PermutationGenerator g = new PermutationGenerator();
-        g.generatePermutations("234");
+        PermutationGenerator.generatePermutations("237");
     }
 
-    private void generatePermutations(String phoneNumber) {
+    private static void generatePermutations(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.length() == 0)
+            throw new IllegalArgumentException("invalid input");
         List<String> permutations = new ArrayList<>();
         permutationsHelper(phoneNumber, initializeKeypad(), permutations, 0, "");
         permutations.stream().forEach(System.out::println);
     }
 
-    private Map<Character, String> initializeKeypad() {
+    private static Map<Character, String> initializeKeypad() {
         Map<Character, String> keypad = new HashMap<>();
         keypad.put('2', "abc");
         keypad.put('3', "def");
         keypad.put('4', "ghi");
+        keypad.put('7', "pqrs");
         return keypad;
     }
 
-    private void permutationsHelper(String phoneNumber, Map<Character, String> keypad, List<String> permutations, int level, String intermediate) {
+    private static void permutationsHelper(String phoneNumber, Map<Character, String> keypad, List<String> permutations, int level, String intermediate) {
         if (level == phoneNumber.length()) {
             permutations.add(intermediate);
             return;
