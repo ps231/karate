@@ -9,6 +9,6 @@ public class FindSizeOfBT {
     private static int findSize(BinaryTreeNode n) {
         if (n == null)
             return 0;
-        return 1 + findSize(n.left) + findSize(n.right);
+        return findSize(n.left) + findSize(n.right) + 1;
     }
 }
