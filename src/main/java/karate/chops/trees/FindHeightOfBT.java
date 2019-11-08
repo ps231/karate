@@ -9,6 +9,6 @@ public class FindHeightOfBT {
     private static int findHeight(BinaryTreeNode n) {
         if (n == null)
             return 0;
-        return 1 + Math.max(findHeight(n.left), findHeight(n.right));
+        return Math.max(findHeight(n.left), findHeight(n.right)) + 1;
     }
 }
