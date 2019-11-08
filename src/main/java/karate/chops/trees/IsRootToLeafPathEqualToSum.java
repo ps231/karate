@@ -17,6 +17,7 @@ public class IsRootToLeafPathEqualToSum {
             return false;
         if (n.left == null && n.right == null && n.value == remainingSum)
             return true;
-        return hasPathEqualsSum(n.left, remainingSum - n.value) || hasPathEqualsSum(n.right, remainingSum - n.value);
+        return hasPathEqualsSum(n.left, remainingSum - n.value) ||
+                hasPathEqualsSum(n.right, remainingSum - n.value);
     }
 }
