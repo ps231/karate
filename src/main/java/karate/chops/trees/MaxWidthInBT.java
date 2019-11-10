@@ -8,39 +8,38 @@ public class MaxWidthInBT {
         System.out.println(maxWidth(BinaryTree.createPerfectBinaryTree()));
         System.out.println(maxWidth(BinaryTree.createBalancedTree()));
         System.out.println(maxWidth(BinaryTree.createTreeForFlattening()));
+        System.out.println(maxWidth(null));
     }
 
     private static int maxWidth(BinaryTreeNode n) {
         int maxWidth = Integer.MIN_VALUE;
-
         if (n == null)
             return maxWidth;
-
         Queue<BinaryTreeNode> q1 = new LinkedList<>();
         Queue<BinaryTreeNode> q2 = new LinkedList<>();
-
         q1.offer(n);
-
         while (!q1.isEmpty() || !q2.isEmpty()) {
-            maxWidth = traverseLevel(maxWidth, q1, q2);
-            maxWidth = traverseLevel(maxWidth, q2, q1);
+            maxWidth = getMaxWidth(q1, maxWidth);
+            traverseLevel(q1, q2);
+            maxWidth = getMaxWidth(q2, maxWidth);
+            traverseLevel(q2, q1);
         }
         return maxWidth;
     }
 
-    private static int traverseLevel(int maxWidth, Queue<BinaryTreeNode> currentLevel, Queue<BinaryTreeNode> nextLevel) {
-        maxWidth = getMax(maxWidth, currentLevel);
-        while (!currentLevel.isEmpty()) {
-            BinaryTreeNode t = currentLevel.poll();
+    private static void traverseLevel(final Queue<BinaryTreeNode> currentLevelQueue, final Queue<BinaryTreeNode> nextLevelQueue) {
+        while (!currentLevelQueue.isEmpty()) {
+            BinaryTreeNode t = currentLevelQueue.poll();
             if (t.left != null)
-                nextLevel.offer(t.left);
+                nextLevelQueue.offer(t.left);
             if (t.right != null)
-                nextLevel.offer(t.right);
+                nextLevelQueue.offer(t.right);
         }
-        return maxWidth;
     }
 
-    private static int getMax(int currentMax, Queue<BinaryTreeNode> q) {
-        return Math.max(currentMax, q.size());
+    private static int getMaxWidth(final Queue<BinaryTreeNode> q, int currentMaxWidth) {
+        if (!q.isEmpty())
+            currentMaxWidth = Math.max(currentMaxWidth, q.size());
+        return currentMaxWidth;
     }
 }
