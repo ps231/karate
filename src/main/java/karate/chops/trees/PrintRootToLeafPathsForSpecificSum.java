@@ -14,18 +14,22 @@ public class PrintRootToLeafPathsForSpecificSum {
     }
 
     private static void printPathThatHasExactSum(BinaryTreeNode n, int sum) {
-        List<String> result = new ArrayList<>();
-        helper(n, sum, result, "");
-        System.out.println("Paths equal to sum: " + result.size());
-        result.stream().forEach(System.out::println);
+        List<String> allPaths = new ArrayList<>();
+        String intermediatePath = "";
+        helper(n, sum, allPaths, intermediatePath);
+        System.out.println("Tree paths with sum=" + sum + " : " + allPaths.size());
+        for (String s : allPaths)
+            System.out.println(s);
     }
 
-    private static void helper(BinaryTreeNode root, int remainingSum, List<String> paths, String intermediatePath) {
-        if (root == null)
+    private static void helper(BinaryTreeNode n, int remainingSum, List<String> allPaths, String intermediatePath) {
+        if (n == null)
             return;
-        helper(root.left, remainingSum - root.value, paths, intermediatePath + " " + root.value);
-        helper(root.right, remainingSum - root.value, paths, intermediatePath + " " + root.value);
-        if (root.left == null && root.right == null && root.value == remainingSum)
-            paths.add(intermediatePath + " " + root.value);
+        if (n.left == null && n.right == null && n.value == remainingSum) {
+            allPaths.add(intermediatePath + " " + n.value);
+            return;
+        }
+        helper(n.left, remainingSum - n.value, allPaths, intermediatePath + " " + n.value);
+        helper(n.right, remainingSum - n.value, allPaths, intermediatePath + " " + n.value);
     }
 }
