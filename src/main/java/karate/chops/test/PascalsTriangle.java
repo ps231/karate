@@ -5,49 +5,46 @@ import java.util.List;
 
 public class PascalsTriangle {
     public static void main(String[] args) {
-        printResult(drawPascalsTriangle(0));
-        printResult(drawPascalsTriangle(1));
-        printResult(drawPascalsTriangle(2));
-        printResult(drawPascalsTriangle(3));
-        printResult(drawPascalsTriangle(4));
-        printResult(drawPascalsTriangle(5));
-        printResult(drawPascalsTriangle(6));
+        print(pascalsTriangle(1));
+        print(pascalsTriangle(2));
+        print(pascalsTriangle(3));
+        print(pascalsTriangle(4));
+        print(pascalsTriangle(5));
+        print(pascalsTriangle(6));
+        print(pascalsTriangle(0));
     }
 
-    private static void printResult(List<List<Integer>> pascalsTriangle) {
-        if (pascalsTriangle == null) {
-            System.out.println("cannot draw the triangle");
-        } else {
-            for (List<Integer> row : pascalsTriangle) {
-                for (int col : row)
-                    System.out.print(col + " ");
-                System.out.println("");
-            }
-        }
-        System.out.println("--");
-    }
-
-    public static List<List<Integer>> drawPascalsTriangle(int n) {
-        if (n <= 0)
-            return null;
-
+    private static List<List<Integer>> pascalsTriangle(int rows) {
+        if (rows <= 0 || rows > 100)
+            throw new IllegalArgumentException("invalid input");
         List<List<Integer>> result = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < rows; i++) {
             List<Integer> intermediate = new ArrayList<>();
-            if (i == 0)
+            if (i == 0) {
                 intermediate.add(1);
-            else {
-                for (int j = 0; j <= i; j++) {
-                    if (j == 0 || j == i) {
-                        intermediate.add(1);
-                    } else {
-                        intermediate.add(result.get(i - 1).get(j - 1) + result.get(i - 1).get(j));
-                    }
-                }
+                result.add(intermediate);
+                continue;
+            } else if (i == 1) {
+                intermediate.add(1);
+                intermediate.add(1);
+                result.add(intermediate);
+                continue;
+            } else {
+                intermediate.add(1);
+                for (int j = 0; j < i - 1; j++)
+                    intermediate.add(result.get(i - 1).get(j) + result.get(i - 1).get(j + 1));
+                intermediate.add(1);
+                result.add(intermediate);
             }
-            result.add(intermediate);
         }
         return result;
+    }
+
+    private static void print(List<List<Integer>> result) {
+        for (List<Integer> intermediate : result) {
+            for (int i : intermediate)
+                System.out.print(i + " ");
+            System.out.println();
+        }
     }
 }
