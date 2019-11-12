@@ -3,49 +3,41 @@ package karate.chops.trees;
 import java.util.Stack;
 
 public class BSTIterator {
-    private BinaryTreeNode iter;
     private Stack<BinaryTreeNode> stack = new Stack<>();
+    private BinaryTreeNode iterator;
 
-    public BSTIterator(BinaryTreeNode root) {
-        if (root == null)
-            iter = null;
-        else {
-            while (root.left != null) {
-                stack.push(root);
-                root = root.left;
-            }
-            iter = root;
+    public BSTIterator(BinaryTreeNode n) {
+        if (n == null)
+            throw new IllegalArgumentException("invalid input");
+        iterator = n;
+        while (iterator.left != null) {
+            stack.push(iterator);
+            iterator = iterator.left;
         }
     }
 
     public boolean hasNext() {
-        return iter != null;
+        return iterator != null;
     }
 
-    public BinaryTreeNode getNext() {
-        BinaryTreeNode result = iter;
-
-        if (iter.right == null) {
-            if (!stack.isEmpty())
-                iter = stack.pop();
-            else {
-                iter = null;
+    public BinaryTreeNode next() {
+        BinaryTreeNode current = iterator;
+        if (iterator.right != null) {
+            iterator = iterator.right;
+            while (iterator.left != null) {
+                stack.push(iterator);
+                iterator = iterator.left;
             }
-        } else {
-            iter = iter.right;
-            while (iter.left != null) {
-                stack.push(iter);
-                iter = iter.left;
-            }
-        }
-
-        return result;
+        } else if (!stack.isEmpty())
+            iterator = stack.pop();
+        else
+            iterator = null;
+        return current;
     }
 
     public static void main(String[] args) {
-        BSTIterator iter = new BSTIterator(CreateBST.createBinarySearchTree());
-        while (iter.hasNext()) {
-            System.out.println(iter.getNext().value);
-        }
+        BSTIterator iterator = new BSTIterator(CreateBST.createBinarySearchTree());
+        while (iterator.hasNext())
+            System.out.println(iterator.next().value);
     }
 }
