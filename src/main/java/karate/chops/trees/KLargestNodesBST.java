@@ -3,9 +3,9 @@ package karate.chops.trees;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KLargestBST {
+public class KLargestNodesBST {
 	public static void main(String... args) {
-		KLargestBST k = new KLargestBST();
+		KLargestNodesBST k = new KLargestNodesBST();
 		List<Integer> max = new ArrayList<Integer>();
 		k.klargest(CreateBST.createBinarySearchTree(), 3, max);
 		max.stream().forEach(System.out::println);
