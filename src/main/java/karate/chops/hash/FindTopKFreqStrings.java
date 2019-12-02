@@ -1,12 +1,16 @@
 package karate.chops.hash;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 public class FindTopKFreqStrings {
 
     public static void main(String... strings) {
-        String[] inputArray = new String[]{"a", "b", "a", "c", "c", "c", "d", "d", "e", "d", "d"};
-        List<String> input = Arrays.asList(inputArray);
+        List<String> input = Arrays.asList("a", "b", "a", "c", "c", "c", "d", "d", "e", "d", "d");
         findTopKFreqString(input, 2).stream().forEach(System.out::println);
         System.out.println("--");
         findTopKFreqString(input, 3).stream().forEach(System.out::println);
@@ -15,48 +19,49 @@ public class FindTopKFreqStrings {
         System.out.println("--");
     }
 
-    private static List<String> findTopKFreqString(List<String> input, int k) {
-        Map<String, Temp> freqMap = new HashMap<>();
+    private static List<String> findTopKFreqString(List<String> stringList, int k) {
+        if (stringList == null || stringList.size() == 0)
+            return new ArrayList<>();
 
-        for (String s : input) {
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String s : stringList) {
             if (freqMap.containsKey(s)) {
-                freqMap.put(s, new Temp(s, freqMap.get(s).freq + 1));
+                int updatedFreq = freqMap.get(s) + 1;
+                freqMap.put(s, updatedFreq);
             } else {
-                freqMap.put(s, new Temp(s, 1));
+                freqMap.put(s, 1);
             }
         }
 
         PriorityQueue<Temp> minHeap = new PriorityQueue<>();
-
-        for (Map.Entry<String, Temp> e : freqMap.entrySet()) {
-            if (minHeap.size() == k) {
-                if (minHeap.peek().freq < e.getValue().freq) {
-                    minHeap.poll();
-                    minHeap.offer(e.getValue());
-                }
+        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) {
+            if (minHeap.size() < k) {
+                minHeap.offer(new Temp(entry.getKey(), entry.getValue()));
             } else {
-                minHeap.offer(e.getValue());
+                if (minHeap.peek().freq < entry.getValue()) {
+                    minHeap.poll();
+                    minHeap.offer(new Temp(entry.getKey(), entry.getValue()));
+                }
             }
         }
 
-        List<String> freqStringResults = new ArrayList<>();
+        List<String> topKFreqStrings = new ArrayList<>();
         while (!minHeap.isEmpty())
-            freqStringResults.add(minHeap.poll().s);
-
-        return freqStringResults;
-    }
-}
-
-class Temp implements Comparable<Temp> {
-    String s;
-    int freq;
-
-    Temp(String s, int freq) {
-        this.s = s;
-        this.freq = freq;
+            topKFreqStrings.add(minHeap.poll().s);
+        return topKFreqStrings;
     }
 
-    public int compareTo(Temp t) {
-        return Integer.compare(this.freq, t.freq);
+    private static class Temp implements Comparable<Temp> {
+        String s;
+        int freq;
+
+        Temp(String s, int freq) {
+            this.s = s;
+            this.freq = freq;
+        }
+
+        public int compareTo(Temp t) {
+            return Integer.compare(this.freq, t.freq);
+        }
     }
 }
